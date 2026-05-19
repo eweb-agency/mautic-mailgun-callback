@@ -8,10 +8,9 @@ Processes Mailgun webhook events (bounces, spam complaints, unsubscribes) and up
 
 ## Installation
 
-Copy the plugin folder to your Mautic `plugins/` directory:
-
+Install plugin via composer :
 ```bash
-cp -r MauticMailgunCallbackBundle /path/to/mautic/plugins/
+composer require dignac3/mautic-mailgun-callback-bundle
 ```
 
 Then clear the Mautic cache:
@@ -77,23 +76,7 @@ Mautic core exposes a public endpoint `POST /mailer/callback` that dispatches a
 `mautic.email.on_transport_webhook` event. This plugin listens to that event,
 validates the Mailgun HMAC-SHA256 signature, parses the payload, and calls
 `TransportCallback::addFailureByAddress()` or `addFailureByHashId()` to add
-the contact to Mautic's DNC list.
-
-```
-Mailgun → POST /mailer/callback
-           ↓
-    [Signature validation]
-           ↓
-    [Event routing]
-    ┌──────────────────────────────┐
-    │ failed/permanent → DNC BOUNCED      │
-    │ complained       → DNC UNSUBSCRIBED │
-    │ unsubscribed     → DNC UNSUBSCRIBED │
-    │ others           → ignored          │
-    └──────────────────────────────┘
-           ↓
-    TransportCallback → Mautic DNC
-```
+the contact to Mautic's Do no contact list.
 
 ---
 
